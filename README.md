@@ -5,12 +5,9 @@ Image,
 Audio,
 Video.
 
-![img](https://ibb.co/TqSVQ1c)
-
-![alt tag](https://ibb.co/TqSVQ1c)
-![alt tag](https://ibb.co/TqSVQ1c)
-![alt tag](https://ibb.co/TqSVQ1c)
-
+![IMG_9416](https://user-images.githubusercontent.com/84714866/120181588-e4532000-c22a-11eb-88a5-4d2de873694d.PNG)
+![IMG_9417](https://user-images.githubusercontent.com/84714866/120181601-eae19780-c22a-11eb-9880-c3684a30a2ac.PNG)
+![IMG_9418](https://user-images.githubusercontent.com/84714866/120181603-ec12c480-c22a-11eb-83b1-0311cee247ea.PNG)
 
 ## Installation
 
@@ -35,62 +32,60 @@ Inherit the **MessagingDelegate** and its methods
 ## Call method for getting the token  
 
 func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-      print("Firebase registration token: \(String(describing: fcmToken))")
-      let dataDict:[String: String] = ["token": fcmToken ?? ""]
-      NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, 
-      userInfo: dataDict)
+   print("Firebase registration token: \(String(describing: fcmToken))")
+   let dataDict:[String: String] = ["token": fcmToken ?? ""]
+   NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil,userInfo: dataDict)
 }
 
 ## Register the application to get the notification and called it inside the didFinishLaunchingWithOptions
 
-func NotificationConfiguration(_ application: UIApplication){
+func NotificationConfiguration(_ application: UIApplication)
+{
   if #available(iOS 10.0, *) {
-          // For iOS 10 display notification (sent via APNS)
-          UNUserNotificationCenter.current().delegate = self
-          Messaging.messaging().delegate = self
-          Messaging.messaging().isAutoInitEnabled = true
-          let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-          UNUserNotificationCenter.current().requestAuthorization(
-            options: authOptions,
-            completionHandler: {_, _ in })
-        } else {
-          let settings: UIUserNotificationSettings =
-          UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-          application.registerUserNotificationSettings(settings)
-        }
+      // For iOS 10 display notification (sent via APNS)
+    UNUserNotificationCenter.current().delegate = self
+    Messaging.messaging().delegate = self
+    Messaging.messaging().isAutoInitEnabled = true
+    let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+    UNUserNotificationCenter.current().requestAuthorization(
+      options: authOptions,
+      completionHandler: {_, _ in })
+     } else {
+     let settings: UIUserNotificationSettings =
+     UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+     application.registerUserNotificationSettings(settings)
+    }
         
-        //MARK: DEFINE CATEGRORY ID FOR GEETING AND PROCESSING CUSTOM NOTIFICATION
-        
-        let openBoardAction = UNNotificationAction(identifier: UNNotificationDefaultActionIdentifier, title: "Open Board", options:                   UNNotificationActionOptions.foreground)
-        let contentAddedCategory = UNNotificationCategory(identifier: "CATID!", actions: [openBoardAction], intentIdentifiers: [], hiddenPreviewsBodyPlaceholder: "", options: .customDismissAction)
+   //MARK: DEFINE CATEGRORY ID FOR GEETING AND PROCESSING CUSTOM NOTIFICATION
+      let openBoardAction = UNNotificationAction(identifier: UNNotificationDefaultActionIdentifier, title: "Open Board",             options:UNNotificationActionOptions.foreground)                              
+      let contentAddedCategory = UNNotificationCategory(identifier: "CATID!", actions: [openBoardAction], intentIdentifiers: [], hiddenPreviewsBodyPlaceholder: "", options: .customDismissAction)
         UNUserNotificationCenter.current().setNotificationCategories([contentAddedCategory])
-
-        application.registerForRemoteNotifications()
+        application.registerForRemoteNotifications()        
 }
 ```
 ## Set Up inside the Notification Service extension
 Open the file **NotificationService.swift** and modify the code like below snippet
 
 ```python
-override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void){
+override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void)
+{
        guard let body = bestAttemptContent.userInfo["fcm_options"] as? Dictionary<String, Any>, let imageUrl = body["image"] as? String else { fatalError("Image        Link not found") }
-             if(imageUrl.contains(".mp4")){
-                downloadMedia(url: imageUrl,".mp4","video") { (attachment) in
-                    if let attachment = attachment {
-                        bestAttemptContent.attachments = [attachment]
-                        bestAttemptContent.categoryIdentifier = "CATID!"
-                        contentHandler(bestAttemptContent)
-                    }
+       if(imageUrl.contains(".mp4")){
+          downloadMedia(url: imageUrl,".mp4","video") { (attachment) in
+              if let attachment = attachment {
+                  bestAttemptContent.attachments = [attachment]
+                  bestAttemptContent.categoryIdentifier = "CATID!"
+                  contentHandler(bestAttemptContent)
+              }
 
-                }
-            }
+          }
+      }
 }
 ```
 Use method to download the image from URL and store in local device storage and attched downloaded file to the notification content.
 
 ```python
  private func downloadMedia(url: String,_ extensionValue:String, _ identifier:String, handler: @escaping (UNNotificationAttachment?) -> Void) {{
-
       let task = URLSession.shared.downloadTask(with: URL(string: url)!) { (downloadedUrl, response, error) in
             guard let downloadedUrl = downloadedUrl else { handler(nil) ; return }
             var urlPath = URL(fileURLWithPath: NSTemporaryDirectory())
@@ -105,9 +100,11 @@ Use method to download the image from URL and store in local device storage and 
                 handler(nil)
             }
         }
-        task.resume()
+       task.resume()
 }
 ```
+# The same way we can pass the url of Image and Audio with extension and idetifier
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
