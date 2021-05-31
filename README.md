@@ -1,9 +1,9 @@
 # MutableCustomNotification
 
-Push notifications allow developers to reach users, even when users aren't actively using an app! With the latest update of iOS Apple provide very useful extensions which are user-friendly. In this tutorial, I am going to share the configuration, set up and testing of Notification with the media attachments like 
-Image,
-Audio,
-Video.
+Push notifications allow developers to reach users, even when users aren't actively using an app! With the latest update of iOS Apple provide very useful extensions which are user-friendly. In this tutorial, I am going to share the configuration, set up of Notification with the media attachments like 
+* Image
+* Audio
+* Video
 
 ![IMG_9416](https://user-images.githubusercontent.com/84714866/120181588-e4532000-c22a-11eb-88a5-4d2de873694d.PNG)
 ![IMG_9417](https://user-images.githubusercontent.com/84714866/120181601-eae19780-c22a-11eb-9880-c3684a30a2ac.PNG)
@@ -56,16 +56,22 @@ func NotificationConfiguration(_ application: UIApplication)
      application.registerUserNotificationSettings(settings)
     }
         
-   //MARK: DEFINE CATEGRORY ID FOR GEETING AND PROCESSING CUSTOM NOTIFICATION
-      let openBoardAction = UNNotificationAction(identifier: UNNotificationDefaultActionIdentifier, title: "Open Board",             options:UNNotificationActionOptions.foreground)                              
-      let contentAddedCategory = UNNotificationCategory(identifier: "CATID!", actions: [openBoardAction], intentIdentifiers: [], hiddenPreviewsBodyPlaceholder: "", options: .customDismissAction)
-        UNUserNotificationCenter.current().setNotificationCategories([contentAddedCategory])
-        application.registerForRemoteNotifications()        
+   # DEFINE CATEGRORY ID FOR GEETING AND PROCESSING CUSTOM NOTIFICATION
+   let openBoardAction = UNNotificationAction(identifier: UNNotificationDefaultActionIdentifier, title: "Open Board",             options:UNNotificationActionOptions.foreground)                              
+   let contentAddedCategory = UNNotificationCategory(identifier: "CATID!", actions: [openBoardAction], intentIdentifiers: [], hiddenPreviewsBodyPlaceholder: "", options: .customDismissAction)
+   UNUserNotificationCenter.current().setNotificationCategories([contentAddedCategory])
+   application.registerForRemoteNotifications()        
 }
 ```
-## Set Up inside the Notification Service extension
+## Set Up NotificationServiceExtension
+
+Add Notification Service extension as per the below screenshot and set up the Notification Service extension inside project
+
+![IMG_9416](https://user-images.githubusercontent.com/84714866/120182723-61cb6000-c22c-11eb-97f3-a78292abc6c3.png)
+
 Open the file **NotificationService.swift** and modify the code like below snippet
 
+**NOTE:** Set up categoryIdentifier is must and it should be same as per the payload and as per the set up which is did in AppDelegate
 ```python
 override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void)
 {
@@ -103,7 +109,8 @@ Use method to download the image from URL and store in local device storage and 
        task.resume()
 }
 ```
-# The same way we can pass the url of Image and Audio with extension and idetifier
+## Note
+The same way we can pass the url of Image and Audio with extension and idetifier
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
