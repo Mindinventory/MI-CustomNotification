@@ -1,28 +1,12 @@
 //
-//  AppDelegate.swift
+//  UIApplication+CustomNotification.swift
 //  CustomNotification
 //
-//  Created by Riddhi Patel on 28/05/21.
+//  Created by Riddhi Patel on 31/05/21.
 //
 
 import UIKit
 import Firebase
-@main
-class AppDelegate: UIResponder, UIApplicationDelegate {
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        FirebaseApp.configure()
-        NotificationConfiguration(application)
-        return true
-    }
-
-    // MARK: UISceneSession Lifecycle
-    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
-    }
-    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-    }
-}
 
 extension AppDelegate:UNUserNotificationCenterDelegate,MessagingDelegate{
     //MARK: NOTIFICATION CONFIGURATION
