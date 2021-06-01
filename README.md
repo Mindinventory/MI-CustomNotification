@@ -21,46 +21,21 @@ pod 'Firebase/Messaging
 
 Set up the firebase account and Developer account with require **AppID, certificate, Provisioning profiles, and Googleserivce file.**
 
-## Usage And configure the AppDelagate
+## Project SetUp
+
+Drag and Drop the file **UIApplication+CustomNotification** or add the floder **MIAppDelegateExtension** from the project folder and add to your project.
+
+## Modify the AppDelagate
+
 import Firebase
 
-Call **FirebaseApp.configure()** in **didFinishLaunchingWithOptions** Method
-
-Inherit the **MessagingDelegate** and its methods
+Call **FirebaseApp.configure()** and **NotificationConfiguration(application)** in **didFinishLaunchingWithOptions** Method
 
 ```python
-## Call method for getting the token  
-
-func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-   print("Firebase registration token: \(String(describing: fcmToken))")
-   let dataDict:[String: String] = ["token": fcmToken ?? ""]
-   NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil,userInfo: dataDict)
-}
-
-## Register the application to get the notification and called it inside the didFinishLaunchingWithOptions
-
-func NotificationConfiguration(_ application: UIApplication)
-{
-  if #available(iOS 10.0, *) {
-      // For iOS 10 display notification (sent via APNS)
-    UNUserNotificationCenter.current().delegate = self
-    Messaging.messaging().delegate = self
-    Messaging.messaging().isAutoInitEnabled = true
-    let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-    UNUserNotificationCenter.current().requestAuthorization(
-      options: authOptions,
-      completionHandler: {_, _ in })
-     } else {
-     let settings: UIUserNotificationSettings =
-     UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-     application.registerUserNotificationSettings(settings)
-    }
-        
-   # DEFINE CATEGRORY ID FOR GEETING AND PROCESSING CUSTOM NOTIFICATION
-   let openBoardAction = UNNotificationAction(identifier: UNNotificationDefaultActionIdentifier, title: "Open Board",             options:UNNotificationActionOptions.foreground)                              
-   let contentAddedCategory = UNNotificationCategory(identifier: "CATID!", actions: [openBoardAction], intentIdentifiers: [], hiddenPreviewsBodyPlaceholder: "", options: .customDismissAction)
-   UNUserNotificationCenter.current().setNotificationCategories([contentAddedCategory])
-   application.registerForRemoteNotifications()        
+func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+   FirebaseApp.configure()
+   NotificationConfiguration(application)
+   return true
 }
 ```
 ## Set Up NotificationServiceExtension
@@ -69,48 +44,22 @@ Add Notification Service extension as per the below screenshot and set up the No
 
 ![IMG_9416](https://user-images.githubusercontent.com/84714866/120182723-61cb6000-c22c-11eb-97f3-a78292abc6c3.png)
 
-Open the file **NotificationService.swift** and modify the code like below snippet
+## Notification Service Project SetUp
 
-**NOTE:** Set up categoryIdentifier is must and it should be same as per the payload and as per the set up which is did in AppDelegate
+Drag and Drop the file **MIService** or add the floder **MINotificationServiceExtension** from the Notification Service project folder and add to your project.
+
+## Modify the NotificationService
+
+Inherit NotificationService from the MIService and wrtie down the following method only
 ```python
-override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void)
-{
-       guard let body = bestAttemptContent.userInfo["fcm_options"] as? Dictionary<String, Any>, let imageUrl = body["image"] as? String else { fatalError("Image        Link not found") }
-       if(imageUrl.contains(".mp4")){
-          downloadMedia(url: imageUrl,".mp4","video") { (attachment) in
-              if let attachment = attachment {
-                  bestAttemptContent.attachments = [attachment]
-                  bestAttemptContent.categoryIdentifier = "CATID!"
-                  contentHandler(bestAttemptContent)
-              }
-
-          }
-      }
+override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
+  super.didReceive(request, withContentHandler: contentHandler)
 }
 ```
-Use method to download the image from URL and store in local device storage and attched downloaded file to the notification content.
+## NOTE
 
-```python
- private func downloadMedia(url: String,_ extensionValue:String, _ identifier:String, handler: @escaping (UNNotificationAttachment?) -> Void) {{
-      let task = URLSession.shared.downloadTask(with: URL(string: url)!) { (downloadedUrl, response, error) in
-            guard let downloadedUrl = downloadedUrl else { handler(nil) ; return }
-            var urlPath = URL(fileURLWithPath: NSTemporaryDirectory())
-            let uniqueUrlEnding = ProcessInfo.processInfo.globallyUniqueString + extensionValue
-            urlPath = urlPath.appendingPathComponent(uniqueUrlEnding)
-            try? FileManager.default.moveItem(at: downloadedUrl, to: urlPath)
-            do {
-                let attachment = try UNNotificationAttachment(identifier: identifier, url: urlPath, options: nil)
-                handler(attachment)
-            } catch {
-                print("attachment error")
-                handler(nil)
-            }
-        }
-       task.resume()
-}
-```
-## Note
-The same way we can pass the url of Image and Audio with extension and idetifier
+Please verify the **UNNotificationCategory** Identifier in **UIApplication+CustomNotification** file and inside **MIService** file it should be the same like you set in your notification payload.
+
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
