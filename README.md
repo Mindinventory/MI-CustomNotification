@@ -60,6 +60,8 @@ override func didReceive(_ request: UNNotificationRequest, withContentHandler co
 
 Please verify the **UNNotificationCategory** Identifier in **UIApplication+CustomNotification** file and inside **MIService** file it should be the same like you set in your notification payload.
 
+**Please take care of the bundle id of Notification Service project it should be compulsory prefix with the main project bundle ID. See the demo project's both bundle id main project and Notification Service project BundleId**
+
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
