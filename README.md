@@ -1,13 +1,13 @@
-# MutableCustomNotification
+# MI-Notification
 
 Push notifications allow developers to reach users, even when users aren't actively using an app! With the latest update of iOS Apple provide very useful extensions which are user-friendly. In this tutorial, I am going to share the configuration, set up of Notification with the media attachments like 
 * Image
 * Audio
 * Video
 
-![IMG_9416](https://user-images.githubusercontent.com/84714866/120181588-e4532000-c22a-11eb-88a5-4d2de873694d.PNG)
-![IMG_9417](https://user-images.githubusercontent.com/84714866/120181601-eae19780-c22a-11eb-9880-c3684a30a2ac.PNG)
-![IMG_9418](https://user-images.githubusercontent.com/84714866/120181603-ec12c480-c22a-11eb-83b1-0311cee247ea.PNG)
+![IMG_9422 2](https://user-images.githubusercontent.com/84714866/120331004-f906e500-c30a-11eb-8294-436b4ee26d3c.PNG)
+![IMG_9422](https://user-images.githubusercontent.com/84714866/120331023-fe642f80-c30a-11eb-87cb-e3ecf88de3b2.PNG)
+![IMG_9423 3](https://user-images.githubusercontent.com/84714866/120331027-fefcc600-c30a-11eb-8a4c-9cdb3ac78f92.PNG)
 
 ## Installation
 
