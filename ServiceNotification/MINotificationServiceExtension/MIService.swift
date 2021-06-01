@@ -46,8 +46,9 @@ open class MIService: UNNotificationServiceExtension {
             
             //MARK: MODIFY NOTIFICATION CONTENT WHEN NOTIFICATION ARRIVE
             
-            guard let body = bestAttemptContent.userInfo["fcm_options"] as? Dictionary<String, Any>, let imageUrl = body["image"] as? String else { fatalError("Image Link not found") }
-             if(imageUrl.contains(".mp4")){
+            guard let body = bestAttemptContent.userInfo["fcm_options"] as? Dictionary<String, Any>, var imageUrl = body["image"] as? String else { fatalError("Image Link not found") }
+           imageUrl = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
+             if(imageUrl.contains(".mp4") || imageUrl.contains(".mov") || imageUrl.contains(".avi")){
                 downloadMedia(url: imageUrl,".mp4","video") { (attachment) in
                     if let attachment = attachment {
                         bestAttemptContent.attachments = [attachment]
@@ -79,7 +80,7 @@ open class MIService: UNNotificationServiceExtension {
                     }
                 }
             }
-
+        
         }
     }
     
@@ -92,7 +93,20 @@ open class MIService: UNNotificationServiceExtension {
         }
         return nil
     }
-    
+    func extractYoutubeIdFromLink(link: String) -> String? {
+        let pattern = "((?<=(v|V)/)|(?<=be/)|(?<=(\\?|\\&)v=)|(?<=embed/))([\\w-]++)"
+        guard let regExp = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) else {
+        return nil
+        }
+        let nsLink = link as NSString
+        let options = NSRegularExpression.MatchingOptions(rawValue: 0)
+        let range = NSRange(location: 0, length: nsLink.length)
+        let matches = regExp.matches(in: link as String, options:options, range:range)
+        if let firstMatch = matches.first {
+        return nsLink.substring(with: firstMatch.range)
+        }
+        return nil
+    }
     //MARK: - DOWNLOAD RESOURCE LIKE AUDIO,VIDEO OR IMAGE FROM THE PAYLOAD URL
 
     private func downloadMedia(url: String,_ extensionValue:String, _ identifier:String, handler: @escaping (UNNotificationAttachment?) -> Void) {
