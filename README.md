@@ -1,6 +1,6 @@
 # MI-Notification
 
-Push notifications allow developers to reach users, even when users aren't actively using an app! With the latest update of iOS Apple provide very useful extensions which are user-friendly. In this tutorial, I am going to share the configuration, set up of Notification with the media attachments like. Read more from [MEDIUM](https://medium.com/p/446a7ffde8c2/edit)
+Push notifications allow developers to reach users, even when users aren't actively using an app! With the latest update of iOS Apple provide very useful extensions which are user-friendly. In this tutorial, I am going to share the configuration, set up of Notification with the media attachments like. Read more from [MEDIUM](https://medium.com/mindful-engineering/notification-customization-446a7ffde8c2)
 * Image
 * Audio
 * Video
